@@ -7,3 +7,5 @@ __pycache__/
 # .vscode directories
 .vscode/
 app/transformer/weights/*
+# ignore all .DS_Store files
+.DS_Store
