@@ -1,0 +1,45 @@
+digraph AutoAuthorRecognition {
+    rankdir=LR;
+    node [shape=box, style=filled, fillcolor=lightgray];
+
+    subgraph cluster_api {
+        label = "FastAPI Backend";
+        style=filled;
+        color=lightblue;
+        main_py [label="main.py\n(FastAPI app)"];
+        lstm_inference [label="lstm_inference.py\n(LSTM logic)"];
+        transformer_inference [label="transformer_inference.py\n(Transformer logic)"];
+        main_py -> lstm_inference [label="/predict/lstm\nimport & call"];
+        main_py -> transformer_inference [label="/predict/transformer\nimport & call"];
+        transformer_inference;
+    }
+
+    subgraph cluster_lstm {
+        label = "LSTM Module";
+        style=filled;
+        color=lightyellow;
+        lstm_inference;
+        lstm_weights [label="weights/\nLSTM model weights", shape=note, fillcolor=white];
+        lstm_inference -> lstm_weights [label="load weights"];
+    }
+
+    subgraph cluster_transformer {
+        label = "Transformer Module";
+        style=filled;
+        color=lightyellow;
+        transformer_weights [label="weights/\nTransformer model files", shape=note, fillcolor=white];
+        transformer_inference -> transformer_weights [label="load weights"];
+    }
+
+    subgraph cluster_frontend {
+        label = "Streamlit Frontend";
+        style=filled;
+        color=lightgreen;
+        streamlit_app [label="streamlit_app.py\n(UI)"];
+        streamlit_app -> main_py [label="API calls"];
+    }
+
+    user [label="User", shape=ellipse, fillcolor=white];
+    user -> streamlit_app [label="Web UI"];
+    user -> main_py [label="API (optional)"];
+}
